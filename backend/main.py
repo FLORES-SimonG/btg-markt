@@ -23,7 +23,7 @@ async def getProducts(supabase: Client = Depends(create_supabase)):
     )
     return response.data
 
-@app.get("/productById/{product_id}")
+@app.get("/products/{product_id}")
 async def getProductById(product_id: int, supabase: Client = Depends(create_supabase)):
    response = (
       await supabase.table("product")
