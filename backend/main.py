@@ -1,12 +1,23 @@
-import supabase_client
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+import os
+from supabase import acreate_client, AsyncClient, Client
+from dotenv import load_dotenv
+
+load_dotenv()
+
+url: str = os.getenv("DB_URL")
+key: str = os.getenv("DB_APIKEY")
 
 app = FastAPI()
 
-@app.get("/getProduct")
-async def getProducts():
+async def create_supabase():
+  supabase: AsyncClient = await acreate_client(url, key)
+  return supabase
+
+@app.get("/products")
+async def getProducts(supabase: Client = Depends(create_supabase)):
     response = (
-        supabase_client.table("product")
+        await supabase.table("product")
         .select("*")
         .execute()
     )
